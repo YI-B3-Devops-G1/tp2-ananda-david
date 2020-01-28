@@ -1,38 +1,44 @@
-version: '3.6'
+version: '3.3'
+
 services:
-  #NGINX
-  web:
-    image: nginx
-#    ports:
-#      - "8080:80"
-#    environment:
-#      - NGINX_HOST=foobar.com
-#      - NGINX_PORT=80
-  #BD
-  db:
-    image: postgres
-    restart: always
-    environment:
-      - DB_USER=devops
-      - DB_PASS=123
-      - DB_NAME=devops_db
-  adminer:
-    image: adminer
-    restart: always
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    depends_on:
+      - api
     ports:
-      - 8080:8080
-  node:
-    image: "node:8"
-    user: "node"
-    working_dir: /home/node/app
-    environment:
-      - NODE_ENV=production
+      - 7000:80
     volumes:
-      - ./:/home/node/app
-    expose:
-      - "8081"
-    command: "npm start"
-  redis:
-    image: "redis:alpine"
-volumes:
-  http:
+      - ./docker-nginx:/etc/nginx/conf.d
+    container_name: nginx
+  api:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    environment:
+      DATABASE_URL: postgres://user:pass@postgres:5432/db
+      NODE_ENV: development
+    volumes:
+      - .:/app/
+    container_name: api
+#    networks:
+#      - network-db
+#      - network-nodejs
+#    depends_on:
+#      - postgres
+#      - redis
+
+#  postgres:
+#    image: postgres:10.4
+#    ports:
+#      - "35432:5432"
+#    environment:
+#      POSTGRES_USER: user
+#      POSTGRES_PASSWORD: pass
+#      POSTGRES_DB: db
+#
+#  redis:
+#    image: "redis:alpine"
+#
+#
