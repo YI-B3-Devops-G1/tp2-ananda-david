@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.1'
 
 services:
   nginx:
@@ -26,20 +26,20 @@ services:
 #    networks:
 #      - network-db
 #      - network-nodejs
-#    depends_on:
-#      - postgres
-#      - redis
+    depends_on:
+      - postgres
+      - redis
 
-#  postgres:
-#    image: postgres:10.4
-#    ports:
-#      - "35432:5432"
-#    environment:
-#      POSTGRES_USER: user
-#      POSTGRES_PASSWORD: pass
-#      POSTGRES_DB: db
-#
-#  redis:
-#    image: "redis:alpine"
-#
-#
+  postgres:
+    image: postgres
+    ports:
+      - "35432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db
+
+  redis:
+    image: "redis:alpine"
+
+
