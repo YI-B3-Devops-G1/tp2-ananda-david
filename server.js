@@ -6,11 +6,17 @@ const port = 3000;
 const app = express();
 
 app.get('/', (req, res) => {
-	res.json('Hello World')
+	res.json('Home')
 });
 
-require('./app/routes/status.routes.js')(app);
+app.get('/status', (req, res) => {
+	res.json({
+		status: "OK",
+		postgresUptime: String,
+		redisConnectedClients: Number
+	});
+});
 
 app.listen(port, () => {
-	console.log(`Server is listening on port ${port}`);
+	console.log(`Server port: ${port}`);
 });
